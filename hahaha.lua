@@ -1,5 +1,4 @@
--- Luna UI Library - URL Loadable Version (PART 1)
--- Usage: local Luna = loadstring(game:HttpGet("YOUR_URL_HERE"))()
+
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -10,6 +9,9 @@ local LocalPlayer = Players.LocalPlayer
 
 local Luna = {}
 Luna.__index = Luna
+
+local Tab = {}
+Tab.__index = Tab
 
 -- Make frame draggable
 local function MakeDraggable(frame)
@@ -48,7 +50,6 @@ local function MakeDraggable(frame)
     end)
 end
 
--- Create Window
 function Luna:CreateWindow(config)
     local Window = {}
     Window.Tabs = {}
@@ -196,7 +197,7 @@ function Luna:CreateWindow(config)
     Window.mainFrame = mainFrame
     Window.logo = logo
     Window.tabContainer = tabContainer
-    Window.contentContainer = contentContainer   
+    Window.contentContainer = contentContainer
 
     function Window:SaveConfigFile()
         if not self.SaveConfig then return end
@@ -220,13 +221,11 @@ function Luna:CreateWindow(config)
         end)
         if success and result then
             self.ConfigData = result
-            
             for key, value in pairs(result) do
                 if self.Elements[key] then
                     self.Elements[key]:Set(value, true)
                 end
             end
-            
             return result
         end
         return nil
@@ -237,12 +236,12 @@ function Luna:CreateWindow(config)
             self:SaveConfigFile()
         end
         gui:Destroy()
-    end  
-    
+    end
+
     function Window:CreateTab(name, icon)
-        local Tab = {}
-        Tab.Name = name
-        Tab.Elements = {}
+        local NewTab = setmetatable({}, Tab)
+        NewTab.Name = name
+        NewTab.Elements = {}
         
         local tabBtn = Instance.new("TextButton")
         tabBtn.Size = UDim2.new(1, 0, 0, 45)
@@ -298,11 +297,11 @@ function Luna:CreateWindow(config)
             end
         end)
         
-        Tab.scrollFrame = scrollFrame
-        Tab.tabBtn = tabBtn
-        Tab.iconImage = iconImage
-        Tab.tabLabel = tabLabel
-        Tab.tabStroke = tabStroke
+        NewTab.scrollFrame = scrollFrame
+        NewTab.tabBtn = tabBtn
+        NewTab.iconImage = iconImage
+        NewTab.tabLabel = tabLabel
+        NewTab.tabStroke = tabStroke
        
         tabBtn.MouseButton1Click:Connect(function()
             for _, t in pairs(Window.Tabs) do
@@ -320,7 +319,7 @@ function Luna:CreateWindow(config)
             tabLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
         end)
         
-        table.insert(Window.Tabs, Tab)
+        table.insert(Window.Tabs, NewTab)
         
         if #Window.Tabs == 1 then
             tabBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 200)
@@ -330,7 +329,7 @@ function Luna:CreateWindow(config)
             scrollFrame.Visible = true
         end
         
-        return Tab
+        return NewTab
     end
     
     if Window.SaveConfig then
@@ -341,7 +340,6 @@ function Luna:CreateWindow(config)
     return Window
 end
 
--- Tab Functions
 function Tab:CreateSection(text)
     local sectionFrame = Instance.new("Frame")
     sectionFrame.Size = UDim2.new(0.95, 0, 0, 30)
