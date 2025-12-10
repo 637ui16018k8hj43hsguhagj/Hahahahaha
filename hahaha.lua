@@ -13,6 +13,9 @@ Luna.__index = Luna
 local Tab = {}
 Tab.__index = Tab
 
+local CreateSection = {} 
+CreateSection.__index = CreateSection
+
 -- Make frame draggable
 local function MakeDraggable(frame)
     local dragging, dragInput, dragStart, startPos
